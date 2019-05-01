@@ -87,7 +87,7 @@ router.put("/message", function (req, res, next) {
     // Update the entry
     chat.save(function (err, update) {
       if (err) return next(err);
-
+      newMessage._id = chat._id;
       req.app.io.emit("newMessage", newMessage);
       res.json(update);
     })
@@ -98,27 +98,27 @@ router.put("/message", function (req, res, next) {
 
 
 
-  // This route will end the call, by changing the variable from false to true
-  router.put("/endcall", function (req, res, next) {
-    // Find the chat by the data id that is passed through
-    Chat.findOne({
-      _id: req.body.chat_id
-    }, function (err, chat) {
+// This route will end the call, by changing the variable from false to true
+router.put("/endcall", function (req, res, next) {
+  // Find the chat by the data id that is passed through
+  Chat.findOne({
+    _id: req.body.chat_id
+  }, function (err, chat) {
+    if (err) return next(err);
+
+    // If we have found the chat, we created a JSON Object that contains the message
+
+    // push the object into the messages array
+    chat.ended = true
+
+    // Update the entry
+    chat.save(function (err, ended) {
       if (err) return next(err);
 
-      // If we have found the chat, we created a JSON Object that contains the message
-
-      // push the object into the messages array
-      chat.ended = true
-
-      // Update the entry
-      chat.save(function (err, ended) {
-        if (err) return next(err);
-
-        req.app.io.emit("callEnded", ended);
-        res.json(ended);
-      })
-
+      req.app.io.emit("callEnded", ended);
+      res.json(ended);
     })
+
   })
+})
 module.exports = router;

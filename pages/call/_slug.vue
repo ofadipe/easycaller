@@ -82,6 +82,7 @@ export default {
   },
   beforeMount() {
     socket.on('newMessage', message => {
+        if(message._id == this.chatData._id) {
       this.chatData.messages.push(message)
 
       if (this.voiceMute !== true) {
@@ -90,10 +91,12 @@ export default {
       }
 
       this.scrollBottom()
+      }
     })
      socket.on('callEnded', message => {
-
+       if(message._id == this.chatData._id) {
       this.chatData.ended = true
+      }
     })
   },
   created() {
