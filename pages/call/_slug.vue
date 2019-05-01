@@ -119,15 +119,21 @@ export default {
       const formData = new FormData()
       formData.append('number', this.insertedNumber)
       if (message == null) {
+        if(this.message == '') {
+          return
+        }
         formData.append('message', this.message)
       } else {
+
         formData.append('message', message)
+
       }
       formData.append('chat_id', this.chatData._id)
       this.$axios
         .put('/api/chats/message', formData)
         .then(response => {
           console.log(response)
+          this.message = ""
         })
         .catch(error => {
           console.log(error)
