@@ -83,6 +83,8 @@ router.put("/message", function(req,res,next) {
     // Update the entry
     chat.save(function(err, update) {
       if(err) return next(err);
+
+      req.app.io.emit("newMessage", newMessage);
       res.json(update);
     })
 

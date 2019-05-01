@@ -1,8 +1,22 @@
+
+// Import and Set Nuxt.js options
+let config = require('../nuxt.config.js')
+config.dev = !(process.env.NODE_ENV === 'production')
+
 const express = require('express')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
 
+
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+app.io = io;
+
+const nuxt = new Nuxt(config)
+
+const { host, port } = nuxt.options.server
+app.set("port", port)
 // Data processing library for Express
 const multer = require("multer")().single();
 
@@ -24,9 +38,6 @@ db.on("error", console.error.bind(console, "MongoDB Connection Error"))
 
 
 
-// Import and Set Nuxt.js options
-let config = require('../nuxt.config.js')
-config.dev = !(process.env.NODE_ENV === 'production')
 
 // Creates the API Route  what is ha
 const chats = require("./routes/messages");
@@ -50,10 +61,15 @@ async function start() {
   app.use(nuxt.render)
 
   // Listen the server
-  app.listen(port, host)
+  server.listen(port, host)
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true
   })
 }
 start()
+
+
+io.on("connection", socket => {
+  console.log("A new user has entered");
+});

@@ -56,6 +56,11 @@ module.exports = {
     {
       src: '@/plugins/vue-tel-input',
       ssr: false
+    },
+    '@/plugins/socket-local',
+    {
+      src: '@/plugins/vue-speech',
+      ssr: false
     }
   ],
 
