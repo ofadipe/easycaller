@@ -57,19 +57,23 @@ router.post('/', function (req, res, next) {
 
 // Get an individual chat
 // Notice how we put in :id, this is so that we can pass through a query paramater to out findOne function
-router.get("/find/:id", function(req,res,next) {
-  Chat.findOne({_id: req.params.id}, function(err, chat) {
-    if(err) return next(err);
+router.get("/find/:id", function (req, res, next) {
+  Chat.findOne({
+    _id: req.params.id
+  }, function (err, chat) {
+    if (err) return next(err);
     res.json(chat);
   })
 })
 
 // Update an database entry
 // A New message to go into the chat
-router.put("/message", function(req,res,next) {
+router.put("/message", function (req, res, next) {
   // Find the chat by the data id that is passed through
-  Chat.findOne({_id: req.body.chat_id}, function(err, chat) {
-    if(err) return next(err);
+  Chat.findOne({
+    _id: req.body.chat_id
+  }, function (err, chat) {
+    if (err) return next(err);
 
     // If we have found the chat, we created a JSON Object that contains the message
     const newMessage = {
@@ -81,13 +85,40 @@ router.put("/message", function(req,res,next) {
     chat.messages.push(newMessage);
 
     // Update the entry
-    chat.save(function(err, update) {
-      if(err) return next(err);
+    chat.save(function (err, update) {
+      if (err) return next(err);
 
       req.app.io.emit("newMessage", newMessage);
       res.json(update);
     })
 
   })
+
 })
+
+
+
+  // This route will end the call, by changing the variable from false to true
+  router.put("/endcall", function (req, res, next) {
+    // Find the chat by the data id that is passed through
+    Chat.findOne({
+      _id: req.body.chat_id
+    }, function (err, chat) {
+      if (err) return next(err);
+
+      // If we have found the chat, we created a JSON Object that contains the message
+
+      // push the object into the messages array
+      chat.ended = true
+
+      // Update the entry
+      chat.save(function (err, ended) {
+        if (err) return next(err);
+
+        req.app.io.emit("callEnded", ended);
+        res.json(ended);
+      })
+
+    })
+  })
 module.exports = router;

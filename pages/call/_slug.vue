@@ -1,7 +1,8 @@
  <template>
   <v-container>
     <v-flex xs12 sm6 md3 v-if="chatData !==null && userNumber !==null">
-      <v-layout row wrap class="chat">
+      <template v-if='chatData.ended == false'>
+  <v-layout row wrap class="chat">
         <v-flex sm12>
           <div
             v-bind:class="{'text-xs-right': message.number !== userNumber}"
@@ -32,7 +33,15 @@
           <v-icon v-if="!voiceMute">volume_up</v-icon>
           <v-icon v-else>volume_off</v-icon>
         </v-btn>
+         <v-btn flat icon color="pink" v-on:click="endCall()">
+          <v-icon>call_end</v-icon>
+
+        </v-btn>
       </div>
+      </template>
+      <template v-else>
+        The call has ended
+      </template>
     </v-flex>
     <v-flex xs12 sm6 md3 v-else-if="chatData !==null && userNumber == null">
       <!-- Check the Phone Number -->
@@ -81,6 +90,10 @@ export default {
       }
 
       this.scrollBottom()
+    })
+     socket.on('callEnded', message => {
+
+      this.chatData.ended = true
     })
   },
   created() {
@@ -144,9 +157,25 @@ export default {
       console.log(messageString)
       var msg = new SpeechSynthesisUtterance(messageString)
       window.speechSynthesis.speak(msg)
+    },
+    endCall() {
+      console.log("call ended");
+       console.log('sending message')
+      const formData = new FormData()
+
+      formData.append('chat_id', this.chatData._id)
+      this.$axios
+        .put('/api/chats/endcall', formData)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 }
+
 </script>
 
 <style>
