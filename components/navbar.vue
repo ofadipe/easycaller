@@ -5,13 +5,13 @@
 
         </v-toolbar-side-icon>
         <v-toolbar-title>
-            <span class="font-weight-light">Olu Fadipe</span>
-            <span> FMP Chat </span>
+
+            <span> EasyCaller</span>
         </v-toolbar-title>
         <v-spacer></v-spacer>
 
         <v-toolbar-title>
-          <span> Final Major Project</span>
+          <span> Making calls for everyone</span>
         </v-toolbar-title>
     </v-toolbar>
 
@@ -38,7 +38,6 @@ export default {
       drawer: false,
       links: [
         { icon: 'home', text: 'Home', route: '/' },
-        { icon: 'done_all', text: 'Results', route: '/results' },
       ]
     }
   }

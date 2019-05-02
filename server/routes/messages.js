@@ -34,9 +34,9 @@ router.post('/', function (req, res, next) {
   newChat.save(function (err, post) {
     if (err) return next(err)
 
-    // Create the Twilio Message Envirionment
+    // Create the Twilio Message Environment
     client.messages.create({
-        body: 'Someone from the number: ' + newChat.caller + ' is calling you, please visit https://easycaller.co.uk/call/' + post._id + ' to get calling!',
+        body: 'Someone from the number: ' + newChat.caller + ' is calling you, please visit https://www.easycaller.co.uk/call/' + post._id + ' to get calling!',
         from: '+447723429420', // This is the Twilio Number
         to: newChat.receiver // The Number to send to
       })
