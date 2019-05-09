@@ -1,4 +1,4 @@
-# fmp-chat
+# EasyCaller
 
 > This is the messaging section of the fmp
 
